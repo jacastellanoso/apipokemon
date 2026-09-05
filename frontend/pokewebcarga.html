@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Animación Pokébola</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html,
+    body {
+      width: 100%;
+      height: 100%;
+    }
+
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: transparent;
+      overflow: hidden;
+    }
+
+    /* CONTENEDOR PRINCIPAL:
+       ambas Pokébolas rotan juntas exactamente en la misma posición */
+    .pokeball-animation {
+      position: relative;
+      width: min(70vw, 368px);
+      aspect-ratio: 1 / 1;
+      transform-origin: 50% 50%;
+      animation: pokeballSwing 0.8s ease-in-out infinite alternate;
+      will-change: transform;
+    }
+
+    .pokeball-layer {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      transform-origin: 50% 50%;
+      will-change: opacity, filter, transform;
+    }
+
+    .pokeball-layer svg {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+
+    /* Pokébola normal */
+    .pokeball-normal {
+      z-index: 1;
+      animation: normalFade 1.45s ease-in-out infinite;
+    }
+
+    /* Pokébola con destello */
+    .pokeball-flash {
+      z-index: 2;
+      animation: flashFade 1.45s ease-in-out infinite;
+    }
+
+    /*
+      Balanceo fluido de ambas Pokébolas juntas:
+      va directamente de +26° a -26° y regresa de -26° a +26°.
+      No pasa por 0° como punto de reinicio y no produce jumping.
+    */
+    @keyframes pokeballSwing {
+      from {
+        transform: rotate(26deg);
+      }
+
+      to {
+        transform: rotate(-26deg);
+      }
+    }
+
+      25% {
+        transform: rotate(26deg);
+      }
+
+      75% {
+        transform: rotate(-26deg);
+      }
+
+      100% {
+        transform: rotate(0deg);
+      }
+    }
+
+    /*
+      Fundido constante entre ambas imágenes.
+      La Pokébola normal desaparece mientras la de destello aparece,
+      siempre exactamente en el mismo punto y con el mismo tamaño.
+    */
+    @keyframes normalFade {
+      0% {
+        opacity: 1;
+        filter: blur(0px);
+      }
+
+      25% {
+        opacity: 0.72;
+        filter: blur(1.5px);
+      }
+
+      50% {
+        opacity: 0;
+        filter: blur(6px);
+      }
+
+      75% {
+        opacity: 0.72;
+        filter: blur(1.5px);
+      }
+
+      100% {
+        opacity: 1;
+        filter: blur(0px);
+      }
+    }
+
+    @keyframes flashFade {
+      0% {
+        opacity: 0;
+        filter: blur(6px);
+      }
+
+      25% {
+        opacity: 0.28;
+        filter: blur(3px);
+      }
+
+      50% {
+        opacity: 1;
+        filter: blur(0px);
+      }
+
+      75% {
+        opacity: 0.28;
+        filter: blur(3px);
+      }
+
+      100% {
+        opacity: 0;
+        filter: blur(6px);
+      }
+    }
+
+    /* Para pantallas pequeñas */
+    @media (max-width: 600px) {
+      .pokeball-animation {
+        width: min(78vw, 300px);
+      }
+    }
+
+    /* Respeta preferencias de accesibilidad */
+    @media (prefers-reduced-motion: reduce) {
+      .pokeball-animation,
+      .pokeball-normal,
+      .pokeball-flash {
+        animation-play-state: paused;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="pokeball-animation" aria-label="Animación de Pokébola">
+
+    <!-- ========================================================= -->
+    <!-- POKÉBOLA NORMAL                                           -->
+    <!-- ========================================================= -->
+    <div class="pokeball-layer pokeball-normal">
+      <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+      <svg width="100%" height="100%" viewBox="0 0 368 368" version="1.1"
+           xmlns="http://www.w3.org/2000/svg"
+           xmlns:xlink="http://www.w3.org/1999/xlink"
+           xml:space="preserve"
+           xmlns:serif="http://www.serif.com/"
+           style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;">
+        <g transform="matrix(1,0,0,1,-4262.425904,-2731.088095)">
+          <g transform="matrix(1,0,0,1,6043.32727,311.091738)">
+            <g transform="matrix(0.985278,0,0,1.089134,-5873.528115,-695.897877)">
+              <path d="M4340.221,2905.95C4346.715,2906.005 4390.638,2905.182 4430.24,2936.596C4482.37,2977.946 4491.743,3047.463 4453.501,3098.653C4422.408,3140.273 4366.917,3160.693 4312.706,3150.647C4244.191,3137.95 4195.915,3079.453 4204.579,3014.604C4212.656,2954.151 4269,2907.153 4337.579,2905.972C4337.79,2905.969 4337.789,2905.971 4340.221,2905.95ZM4340.221,2914.785C4270.201,2914.785 4213.353,2966.212 4213.353,3029.555C4213.353,3092.898 4270.201,3144.325 4340.221,3144.325C4410.241,3144.325 4467.089,3092.898 4467.089,3029.555C4467.089,2966.212 4410.241,2914.785 4340.221,2914.785Z"/>
+              <ellipse cx="4340.221" cy="3029.555" rx="126.868" ry="114.77" style="fill:rgb(245,243,251);"/>
+
+              <clipPath id="normalClip">
+                <ellipse cx="4340.221" cy="3029.555" rx="126.868" ry="114.77"/>
+              </clipPath>
+
+              <g clip-path="url(#normalClip)">
+                <g transform="matrix(0.975448,0,0,1.543966,1.544614,-1700.255781)">
+                  <rect x="4317.821" y="2989.083" width="260.122" height="74.335" style="fill:rgb(202,29,13);"/>
+                </g>
+
+                <g transform="matrix(1.014942,0,0,0.544909,-179.259092,1342.737192)">
+                  <ellipse cx="4452.944" cy="2955.095" rx="125" ry="108.322"
+                           style="fill:rgb(255,160,0);fill-opacity:0.18;"/>
+                </g>
+              </g>
+            </g>
+
+            <g transform="matrix(1,0,0,1,-6050.148122,-459.724073)">
+              <path d="M4587.566,3063.417C4587.566,3064.006 4587.566,3067.387 4584.74,3070.213C4581.925,3073.028 4578.542,3073.038 4577.954,3073.04C4494.617,3073.289 4411.28,3073.04 4327.944,3073.04C4327.355,3073.04 4323.974,3073.04 4321.148,3070.213C4320.277,3069.343 4319.553,3068.29 4319.08,3067.154C4318.85,3066.602 4317.524,3063.417 4319.08,3059.681C4319.303,3059.145 4320.588,3056.061 4324.207,3054.554C4325.377,3054.066 4326.666,3053.798 4327.934,3053.795C4411.27,3053.545 4494.607,3053.795 4577.944,3053.795C4578.532,3053.795 4581.913,3053.795 4584.74,3056.621C4587.566,3059.448 4587.566,3062.828 4587.566,3063.417Z"/>
+            </g>
+
+            <g transform="matrix(0.295385,0,0,0.326521,-2879.242756,1614.478548)">
+              <path d="M4340.221,2885.314C4343.592,2885.343 4407.139,2882.927 4456.928,2931.308C4523.616,2996.111 4510.508,3099.528 4429.375,3149.13C4353.535,3195.497 4249.736,3174.491 4202.904,3102.864C4157.499,3033.419 4184.17,2943.239 4262.524,2903.595C4298.464,2885.41 4331.187,2885.392 4340.221,2885.314ZM4340.221,2914.785C4270.201,2914.785 4213.353,2966.212 4213.353,3029.555C4213.353,3092.898 4270.201,3144.325 4340.221,3144.325C4410.241,3144.325 4467.089,3092.898 4467.089,3029.555C4467.089,2966.212 4410.241,2914.785 4340.221,2914.785Z"/>
+              <ellipse cx="4340.221" cy="3029.555" rx="126.868" ry="114.77"
+                       style="fill:rgb(245,243,251);"/>
+            </g>
+          </g>
+        </g>
+      </svg>
+    </div>
+
+
+    <!-- ========================================================= -->
+    <!-- POKÉBOLA CON DESTELLO                                     -->
+    <!-- ========================================================= -->
+    <div class="pokeball-layer pokeball-flash">
+      <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+      <svg width="100%" height="100%" viewBox="0 0 368 368" version="1.1"
+           xmlns="http://www.w3.org/2000/svg"
+           xmlns:xlink="http://www.w3.org/1999/xlink"
+           xml:space="preserve"
+           xmlns:serif="http://www.serif.com/"
+           style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;">
+
+        <g transform="matrix(1,0,0,1,-4587.067594,-2731.088095)">
+          <g transform="matrix(1,0,0,1,6043.32727,311.091738)">
+            <g transform="matrix(0.985278,0,0,1.089134,-5548.886425,-695.897877)">
+              <path d="M4340.221,2905.95C4346.715,2906.005 4390.638,2905.182 4430.24,2936.596C4482.37,2977.946 4491.743,3047.463 4453.501,3098.653C4422.408,3140.273 4366.917,3160.693 4312.706,3150.647C4244.191,3137.95 4195.915,3079.453 4204.579,3014.604C4212.656,2954.151 4269,2907.153 4337.579,2905.972C4337.79,2905.969 4337.789,2905.971 4340.221,2905.95ZM4340.221,2914.785C4270.201,2914.785 4213.353,2966.212 4213.353,3029.555C4213.353,3092.898 4270.201,3144.325 4340.221,3144.325C4410.241,3144.325 4467.089,3092.898 4467.089,3029.555C4467.089,2966.212 4410.241,2914.785 4340.221,2914.785Z"/>
+
+              <ellipse cx="4340.221" cy="3029.555" rx="126.868" ry="114.77"
+                       style="fill:rgb(245,243,251);"/>
+
+              <clipPath id="flashClip">
+                <ellipse cx="4340.221" cy="3029.555" rx="126.868" ry="114.77"/>
+              </clipPath>
+
+              <g clip-path="url(#flashClip)">
+                <g transform="matrix(0.975448,0,0,1.543966,1.544614,-1700.255781)">
+                  <rect x="4317.821" y="2989.083" width="260.122" height="74.335"
+                        style="fill:rgb(202,29,13);"/>
+                </g>
+
+                <g transform="matrix(1.014942,0,0,0.544909,-179.259092,1342.737192)">
+                  <ellipse cx="4452.944" cy="2955.095" rx="125" ry="108.322"
+                           style="fill:rgb(255,160,0);fill-opacity:0.18;"/>
+                </g>
+              </g>
+            </g>
+
+            <g transform="matrix(1,0,0,1,-5725.506432,-459.724073)">
+              <path d="M4587.566,3063.417C4587.566,3064.006 4587.566,3067.387 4584.74,3070.213C4581.925,3073.028 4578.542,3073.038 4577.954,3073.04C4494.617,3073.289 4411.28,3073.04 4327.944,3073.04C4327.355,3073.04 4323.974,3073.04 4321.148,3070.213C4320.277,3069.343 4319.553,3068.29 4319.08,3067.154C4318.85,3066.602 4317.524,3063.417 4319.08,3059.681C4320.588,3056.061 4323.672,3054.777 4324.207,3054.554C4325.377,3054.066 4326.666,3053.798 4327.934,3053.795C4411.27,3053.545 4494.607,3053.795 4577.944,3053.795C4578.532,3053.795 4581.913,3053.795 4584.74,3056.621C4587.566,3059.448 4587.566,3062.828 4587.566,3063.417Z"/>
+            </g>
+
+            <g transform="matrix(1.034489,0,0,0.983333,-6340.349565,-267.617582)">
+              <ellipse cx="4898.832" cy="2919.979" rx="96.666" ry="101.695"
+                       style="fill:url(#flashRadial);"/>
+            </g>
+
+            <g transform="matrix(0.295385,0,0,0.326521,-2554.601066,1614.478548)">
+              <path d="M4340.221,2885.314C4343.592,2885.343 4407.139,2882.927 4456.928,2931.308C4523.616,2996.111 4510.508,3099.528 4429.375,3149.13C4353.535,3195.497 4249.736,3174.491 4202.904,3102.864C4157.499,3033.419 4184.17,2943.239 4262.524,2903.595C4298.464,2885.41 4331.187,2885.392 4340.221,2885.314ZM4340.221,2914.785C4270.201,2914.785 4213.353,2966.212 4213.353,3029.555C4213.353,3092.898 4270.201,3144.325 4340.221,3144.325C4410.241,3144.325 4467.089,3092.898 4467.089,3029.555C4467.089,2966.212 4410.241,2914.785 4340.221,2914.785Z"/>
+
+              <ellipse cx="4340.221" cy="3029.555" rx="126.868" ry="114.77"
+                       style="fill:rgb(255,69,52);"/>
+            </g>
+          </g>
+        </g>
+
+        <defs>
+          <radialGradient id="flashRadial"
+                          cx="0"
+                          cy="0"
+                          r="1"
+                          gradientUnits="userSpaceOnUse"
+                          gradientTransform="matrix(96.666113,0,0,101.694989,4898.832369,2919.979121)">
+            <stop offset="0" style="stop-color:rgb(255,22,0);stop-opacity:1"/>
+            <stop offset="1" style="stop-color:rgb(202,29,13);stop-opacity:0"/>
+          </radialGradient>
+        </defs>
+      </svg>
+    </div>
+
+  </div>
+
+</body>
+</html>
