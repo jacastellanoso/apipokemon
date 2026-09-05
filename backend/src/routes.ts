@@ -2,7 +2,7 @@
 import { Router } from "express";
 
 // Importamos la función controladora que se encargará del trabajo real
-import { getPokemon } from "./controllers/pokemon";
+import { getPokemon, getPokemonTipos } from "./controllers/pokemon";
 
 // Creamos la instancia del enrutador
 export const router = Router();
@@ -12,3 +12,4 @@ export const router = Router();
 // - Camino: "/pokemon/:nombre" donde ':nombre' es un parámetro dinámico variable
 // - Atendido por: la función 'getPokemon'
 router.get("/pokemon/:nombre", getPokemon);
+router.get("/pokemon/:nombre/tipos", getPokemonTipos);

@@ -39,3 +39,20 @@ export async function getPokemon(req: Request, res: Response) {
     return res.status(500).json({ error: "Error interno del servidor" });
   }
 }
+
+export async function getPokemonTipos(req: Request, res: Response) {
+  const { nombre } = req.params;
+
+  try {
+    const r = await fetch(`https://pokeapi.co/api/v2/pokemon/${nombre}`);
+
+    if (!r.ok) {
+      return res.status(404).json({ error: "No lo encontré" });
+    }
+
+    const data = await r.json();
+    return res.json(data.types.map((t: { type: { name: string } }) => t.type.name));
+  } catch (error) {
+    return res.status(500).json({ error: "Error interno del servidor" });
+  }
+}
