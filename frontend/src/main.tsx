@@ -1,9 +1,7 @@
 import { createRoot } from "react-dom/client";
+import App from "./App";
 
-const rootElement = document.getElementById("root");
+const root = document.getElementById("root");
+if (!root) throw new Error("Falta el punto de entrada de React.");
 
-if (!rootElement) {
-  throw new Error("No se encontró el elemento raíz de React.");
-}
-
-createRoot(rootElement).render(null);
+createRoot(root).render(<App />);
