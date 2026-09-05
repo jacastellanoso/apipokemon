@@ -1,5 +1,6 @@
 // Importamos Express para construir nuestro servidor web
 import express from "express";
+import cors from "cors";
 
 // Importamos las rutas que definimos en routes.ts
 import { router } from "./routes";
@@ -23,6 +24,7 @@ app.get("/", (req, res) => {
 // RUTAS:
 // Todas las rutas del router quedan registradas bajo el prefijo "/api".
 // Por lo tanto, la dirección completa será: /api/pokemon/:nombre
+app.use(cors());
 app.use("/api", router);
 
 // INICIAR EL SERVIDOR:
@@ -31,4 +33,6 @@ app.listen(PORT, () => {
 console.log(` Servidor activo en: http://localhost:${PORT}`);
 console.log(` Ejemplo exitoso:  http://localhost:${PORT}/api/pokemon/pikachu`);
 console.log(` Ejemplo error 404: http://localhost:${PORT}/api/pokemon/pikachuXYZ`);
+console.log(` Ejemplo tipos exitoso: http://localhost:${PORT}/api/pokemon/charizard/tipos`);
+console.log(` Ejemplo tipos 404: http://localhost:${PORT}/api/pokemon/pikachuXYZ/tipos`);
 });
