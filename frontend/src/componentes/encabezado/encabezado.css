@@ -316,6 +316,7 @@ body.header-ready{
 }
 
 body.header-ready .triangle-background{
+  z-index:100;
   height:120px;
   bottom:auto;
 }
@@ -335,7 +336,7 @@ body.header-ready .triangle-background{
   position:fixed;
   top:0;
   left:0;
-  z-index:2;
+  z-index:101;
   display:grid;
   grid-template-columns:20% 80%;
   width:100%;
