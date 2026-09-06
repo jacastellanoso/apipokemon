@@ -1,6 +1,7 @@
 
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{width:100%;height:100%}
+html{scroll-behavior:smooth;scroll-padding-top:120px}
 
 body{
   display:flex;
@@ -80,7 +81,6 @@ body{
   inset:0;
   transform-origin:50% 50%;
   animation:shrinkGroup 1s cubic-bezier(.22,.72,.18,1) 2.25s forwards;
-  view-transition-name:pokeweb-logo;
   filter:none;
 }
 
@@ -453,6 +453,22 @@ body.header-ready .triangle-background{
   overflow:hidden;
 }
 
+/* Navegación por franjas: conserva la geometría técnica de la galería. */
+.site-header.header-ready .navigation-list{gap:5px}
+.site-header.header-ready .navigation-link{position:relative;min-width:132px;min-height:48px;padding:5px 18px 5px 10px;border:1px solid rgba(255,255,255,.48);border-radius:0;background:rgba(12,45,91,.78);clip-path:polygon(10px 0,100% 0,100% calc(100% - 10px),calc(100% - 10px) 100%,0 100%,0 10px)}
+.site-header.header-ready .navigation-link::after{content:"";position:absolute;left:0;right:100%;bottom:0;height:3px;background:#ffcb05;transition:right .2s ease}
+.site-header.header-ready .navigation-link.is-active::after,.site-header.header-ready .navigation-link:hover::after{right:0}
+.site-header.header-ready .navigation-link.is-active{background:#244f89;border-color:#fff}
+.site-header.header-ready .navigation-icon{width:32px;height:32px;border-radius:2px;background:rgba(255,255,255,.12);color:#fff}
+.site-header.header-ready .navigation-icon svg{width:18px;height:18px}
+.site-header.header-ready .navigation-icon .fi{display:flex;align-items:center;justify-content:center;width:18px;height:18px;font-size:18px;line-height:1}
+.site-header.header-ready .navigation-link:hover{color:#fff;background:#2c5d9c;border-color:#ffcb05;transform:translateY(-2px)}
+.site-header.header-ready .navigation-link:hover .navigation-icon{background:rgba(255,255,255,.2);color:#fff;transform:none}
+.logo-group{cursor:inherit;text-decoration:none;-webkit-user-select:none;user-select:none}
+.logo-group svg,.pokeball-layer svg{pointer-events:none;-webkit-user-drag:none;-webkit-user-select:none;user-select:none}
+body:not(.header-ready) .site-footer{display:none}
+@media(pointer:fine){body,body *{cursor:url('/pokebola-cursor-normal.svg') 16 16,auto!important}body.cursor-pokebola--activo,body.cursor-pokebola--activo *{cursor:url('/pokebola-cursor-click.svg') 16 16,auto!important}}
+
 .navigation-icon{
   flex:0 0 auto;
   display:grid;
@@ -618,6 +634,10 @@ body.header-ready .landing-content{
     min-height:50px;
     padding:6px 16px 6px 7px;
   }
+  html{scroll-padding-top:104px}
+  .site-header.header-ready .navigation-list{padding:7px;border-radius:2px}
+  .site-header.header-ready .navigation-list li+li{margin-top:5px}
+  .site-header.header-ready .navigation-link{min-width:100%;min-height:46px}
 
   .navigation-icon{
     width:36px;
@@ -643,24 +663,6 @@ body.header-ready .landing-content{
    ni cambio de proporciones entre el final de la intro y
    la posición definitiva del encabezado.
    ========================================================= */
-::view-transition-group(pokeweb-logo){
-  animation-duration:1s;
-  animation-timing-function:cubic-bezier(.22,.72,.18,1);
-}
-
-::view-transition-old(pokeweb-logo),
-::view-transition-new(pokeweb-logo){
-  animation-duration:1s;
-  animation-timing-function:cubic-bezier(.22,.72,.18,1);
-  mix-blend-mode:normal;
-}
-
-::view-transition-old(root),
-::view-transition-new(root){
-  animation:none;
-  mix-blend-mode:normal;
-}
-
 @media(prefers-reduced-motion:reduce){
   *,*::before,*::after{
     scroll-behavior:auto !important;

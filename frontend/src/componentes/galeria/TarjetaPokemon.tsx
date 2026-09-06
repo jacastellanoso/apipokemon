@@ -3,12 +3,14 @@ import EtiquetaTipo from "./EtiquetaTipo";
 import { useState } from "react";
 import { formatearNombre } from "./servicioPokemon";
 import type { Pokemon } from "./servicioPokemon";
+import Icono from "../ui/Icono";
+import type { CSSProperties } from "react";
 
-export default function TarjetaPokemon({ pokemon, onSeleccionar }: { pokemon: Pokemon; onSeleccionar: (pokemon: Pokemon) => void }) {
+export default function TarjetaPokemon({ pokemon, onSeleccionar, orden }: { pokemon: Pokemon; onSeleccionar: (pokemon: Pokemon) => void; orden: number }) {
   const [imagenFallida, setImagenFallida] = useState<string | null>(null);
   return (
-    <li className="pokemon-tarjeta">
-      <span className="pokemon-tarjeta__numero">#{String(pokemon.id).padStart(3, "0")}</span>
+    <li className="pokemon-tarjeta" style={{ "--orden": Math.min(orden, 11) } as CSSProperties}>
+      <div className="pokemon-tarjeta__superior"><span className="pokemon-tarjeta__numero">#{String(pokemon.id).padStart(3, "0")}</span></div>
       <div className="pokemon-tarjeta__ilustracion">
         {pokemon.imagen && imagenFallida !== pokemon.imagen ? (
           <img
@@ -18,6 +20,7 @@ export default function TarjetaPokemon({ pokemon, onSeleccionar }: { pokemon: Po
             height={240}
             loading="lazy"
             decoding="async"
+            draggable={false}
             onError={() => setImagenFallida(pokemon.imagen)}
           />
         ) : (
@@ -32,6 +35,8 @@ export default function TarjetaPokemon({ pokemon, onSeleccionar }: { pokemon: Po
           ))}
         </ul>
       )}
+      <span className="pokemon-tarjeta__accion" aria-hidden="true">Abrir ficha <Icono nombre="abrir" /></span>
+      <span className="pokemon-tarjeta__esquina" aria-hidden="true" />
       <button type="button" className="pokemon-tarjeta__seleccionar" aria-label={"Ver detalles de " + formatearNombre(pokemon.nombre)} aria-haspopup="dialog" onClick={() => onSeleccionar(pokemon)} />
     </li>
   );

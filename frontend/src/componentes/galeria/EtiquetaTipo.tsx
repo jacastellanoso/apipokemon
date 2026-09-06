@@ -1,5 +1,6 @@
 import type { CSSProperties, ReactNode } from "react";
 import { formatearNombre } from "./servicioPokemon";
+import IconoTipo from "../ui/IconoTipo";
 
 // Traducciones y colores de presentación; no calculan relaciones entre tipos.
 const TIPOS: Record<string, [string, string, string]> = {
@@ -27,7 +28,7 @@ export default function EtiquetaTipo({ tipo, children }: { tipo: string; childre
   const [nombre, fondo, texto] = TIPOS[tipo.toLowerCase()] ?? [formatearNombre(tipo), "#eaf0fb", "#24427b"];
   return (
     <span className="pokemon-tipo" style={{ "--tipo-fondo": fondo, "--tipo-texto": texto } as CSSProperties}>
-      {nombre}{children}
+      <IconoTipo tipo={tipo} /><span>{nombre}</span>{children}
     </span>
   );
 }

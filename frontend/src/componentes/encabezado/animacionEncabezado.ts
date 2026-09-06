@@ -1,10 +1,10 @@
 import { useCallback, useLayoutEffect, useRef } from "react";
 import type { AnimationEvent } from "react";
 
+const CLAVE_INTRO = "pokeweb_intro_vista";
+
 export function useAnimacionEncabezado() {
   const encabezadoRef = useRef<HTMLElement>(null);
-  const transicionRef = useRef<ViewTransition | null>(null);
-
   const construirEncabezado = useCallback(() => {
     const header = encabezadoRef.current;
     if (!header || document.body.classList.contains("header-ready")) return;
@@ -12,21 +12,18 @@ export function useAnimacionEncabezado() {
       if (!encabezadoRef.current) return;
       document.body.classList.add("header-ready");
       header.classList.add("header-ready");
+      try { sessionStorage.setItem(CLAVE_INTRO, "1"); } catch { /* El almacenamiento puede estar restringido. */ }
     };
-    const movimientoReducido = window.matchMedia("(prefers-reduced-motion: reduce)");
-    if (!movimientoReducido.matches && typeof document.startViewTransition === "function") {
-      transicionRef.current = document.startViewTransition(aplicarEstado);
-      return;
-    }
     aplicarEstado();
   }, []);
 
   useLayoutEffect(() => {
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    let introVista = false;
+    try { introVista = sessionStorage.getItem(CLAVE_INTRO) === "1"; } catch { /* Continúa con la intro. */ }
+    if (introVista || window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
       construirEncabezado();
     }
     return () => {
-      transicionRef.current?.skipTransition();
       document.body.classList.remove("header-ready");
     };
   }, [construirEncabezado]);
