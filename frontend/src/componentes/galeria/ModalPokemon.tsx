@@ -4,6 +4,7 @@ import DetallesPokemon from "./DetallesPokemon";
 import EtiquetaTipo from "./EtiquetaTipo";
 import { formatearNombre } from "./servicioPokemon";
 import type { Pokemon } from "./servicioPokemon";
+import BotonCerrar from "../ui/BotonCerrar";
 
 export default function ModalPokemon({ pokemon, onCerrar }: { pokemon: Pokemon; onCerrar: () => void }) {
   const dialogRef = useRef<HTMLDialogElement>(null);
@@ -59,18 +60,17 @@ export default function ModalPokemon({ pokemon, onCerrar }: { pokemon: Pokemon; 
     >
       <header className="pokemon-modal__cabecera">
         <div>
-          <p className="pokemon-tarjeta__numero">#{String(pokemon.id).padStart(3, "0")}</p>
+          <p className="pokemon-tarjeta__numero">ARCHIVO #{String(pokemon.id).padStart(3, "0")}</p>
           <h2 id={tituloId}>{formatearNombre(pokemon.nombre)}</h2>
         </div>
-        <button type="button" className="pokemon-modal__cerrar" aria-label="Cerrar detalles" onClick={onCerrar} autoFocus>
-          <span aria-hidden="true">×</span>
-        </button>
+        <BotonCerrar onClick={onCerrar} />
       </header>
       <div className="pokemon-modal__contenido">
         <div className="pokemon-modal__resumen">
+          <span className="pokemon-modal__escaneo" aria-hidden="true">ANÁLISIS BIOMÉTRICO</span>
           <div className="pokemon-modal__imagen">
             {pokemon.imagen && !imagenFallida ? (
-              <img src={pokemon.imagen} alt={formatearNombre(pokemon.nombre)} width={240} height={240} onError={() => setImagenFallida(true)} />
+              <img src={pokemon.imagen} alt={formatearNombre(pokemon.nombre)} width={240} height={240} draggable={false} onError={() => setImagenFallida(true)} />
             ) : <p className="pokemon-tarjeta__sin-imagen">Imagen no disponible</p>}
           </div>
           {!!pokemon.tipos.length && (

@@ -10,7 +10,7 @@ export const ESTADISTICAS = [
 
 export type Estadisticas = Partial<Record<(typeof ESTADISTICAS)[number][0], number>>;
 export interface Debilidad { tipo: string; multiplicador: number }
-export interface EtapaEvolucion { id: number; nombre: string }
+export interface EtapaEvolucion { id: number; nombre: string; imagen?: string }
 export interface DatosOpcionales {
   estadisticas?: Estadisticas;
   debilidades?: Debilidad[];
@@ -47,10 +47,11 @@ export function leerOpcionales(dato: Record<string, unknown>): DatosOpcionales {
     const caminos = dato.evoluciones.filter((camino): camino is EtapaEvolucion[] =>
       Array.isArray(camino) && camino.length > 0 && camino.every((etapa) =>
         esObjeto(etapa) && typeof etapa.id === "number" && Number.isSafeInteger(etapa.id) &&
-        etapa.id > 0 && typeof etapa.nombre === "string" && !!etapa.nombre.trim()) &&
+        etapa.id > 0 && typeof etapa.nombre === "string" && !!etapa.nombre.trim() &&
+        (etapa.imagen === undefined || (typeof etapa.imagen === "string" && !!etapa.imagen.trim()))) &&
       new Set(camino.map((etapa) => etapa.id)).size === camino.length);
     resultado.evoluciones = [...new Map(caminos.map((camino) =>
-      [camino.map((etapa) => etapa.id).join("-"), camino.map(({ id, nombre }) => ({ id, nombre }))])).values()];
+      [camino.map((etapa) => etapa.id).join("-"), camino.map(({ id, nombre, imagen }) => ({ id, nombre, ...(imagen ? { imagen } : {}) }))])).values()];
   }
   return resultado;
 }

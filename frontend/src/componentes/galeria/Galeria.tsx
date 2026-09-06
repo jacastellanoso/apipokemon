@@ -1,8 +1,11 @@
 import ModalPokemon from "./ModalPokemon";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import TarjetaPokemon from "./TarjetaPokemon";
 import { obtenerPokemon } from "./servicioPokemon";
 import type { Pokemon } from "./servicioPokemon";
+import BuscadorPokemon from "./BuscadorPokemon";
+import FiltrosPokemon from "./FiltrosPokemon";
+import Icono from "../ui/Icono";
 import "./galeria.css";
 
 type Estado =
@@ -14,6 +17,8 @@ export default function Galeria() {
   const [estado, setEstado] = useState<Estado>({ tipo: "cargando" });
   const [intento, setIntento] = useState(0);
   const [seleccionado, setSeleccionado] = useState<Pokemon | null>(null);
+  const [busqueda, setBusqueda] = useState("");
+  const [filtro, setFiltro] = useState("todos");
   const cerrarModal = useCallback(() => setSeleccionado(null), []);
 
   useEffect(() => {
@@ -35,8 +40,16 @@ export default function Galeria() {
     };
   }, [intento]);
 
+  const pokemon = estado.tipo === "exito" ? estado.pokemon : [];
+  const tipos = useMemo(() => [...new Set(pokemon.flatMap((item) => item.tipos))].sort(), [pokemon]);
+  const visibles = useMemo(() => {
+    const consulta = busqueda.trim().toLocaleLowerCase("es");
+    return pokemon.filter((item) => (filtro === "todos" || item.tipos.includes(filtro)) &&
+      (!consulta || item.nombre.toLocaleLowerCase("es").includes(consulta) || String(item.id) === consulta));
+  }, [pokemon, busqueda, filtro]);
+
   return (
-    <section className="galeria" aria-labelledby="galeria-titulo">
+    <section className="galeria" id="galeria" aria-labelledby="galeria-titulo">
       <div className="galeria__contenido">
         <div className="galeria__cabecera">
           <span className="galeria__acento" aria-hidden="true" />
@@ -46,12 +59,13 @@ export default function Galeria() {
           {estado.tipo === "cargando" && (
             <p className="galeria__estado" role="status">
               <span className="galeria__indicador" aria-hidden="true" />
-              Cargando Pokémon…
+              Sincronizando con la Pokédex…
             </p>
           )}
           {estado.tipo === "error" && (
             <div className="galeria__estado">
-              <p>No pudimos cargar los Pokémon. Inténtalo de nuevo.</p>
+              <Icono nombre="alerta" className="galeria__estado-icono" />
+              <p>No pudimos conectar con la Pokédex. Comprueba que el backend esté activo.</p>
               <button className="galeria__reintentar" onClick={() => setIntento((valor) => valor + 1)}>
                 Reintentar
               </button>
@@ -61,11 +75,15 @@ export default function Galeria() {
             <p className="galeria__estado">No se encontraron Pokémon</p>
           )}
         </div>
-        {estado.tipo === "exito" && estado.pokemon.length > 0 && (
-          <ul className="galeria__cuadricula">
-            {estado.pokemon.map((pokemon) => <TarjetaPokemon key={pokemon.id} pokemon={pokemon} onSeleccionar={setSeleccionado} />)}
-          </ul>
-        )}
+        {estado.tipo === "exito" && estado.pokemon.length > 0 && <>
+          <div className="galeria__controles">
+            <BuscadorPokemon valor={busqueda} onCambiar={setBusqueda} />
+            <FiltrosPokemon tipos={tipos} activo={filtro} onCambiar={setFiltro} />
+          </div>
+          {visibles.length ? <ul className="galeria__cuadricula" key={filtro + busqueda}>
+            {visibles.map((item, indice) => <TarjetaPokemon key={item.id} pokemon={item} onSeleccionar={setSeleccionado} orden={indice} />)}
+          </ul> : <p className="galeria__estado">No hay registros que coincidan con tu búsqueda.</p>}
+        </>}
       </div>
       {seleccionado && <ModalPokemon key={seleccionado.id} pokemon={seleccionado} onCerrar={cerrarModal} />}
     </section>

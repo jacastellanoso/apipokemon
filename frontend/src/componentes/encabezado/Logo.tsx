@@ -29,9 +29,9 @@ export function FiltrosLogo() {
   );
 }
 
-export default function Logo() {
+export default function Logo({ ubicacion = "encabezado" }: { ubicacion?: "encabezado" | "footer" }) {
   return (
-<div className="logo-group" role="img" aria-label="Pok&eacute;Web G1">
+<a className={`logo-group logo-group--${ubicacion}`} href="#inicio" aria-label="Ir al inicio">
     <div className="logo-main">
 <svg width="100%" height="100%" viewBox="0 0 974 389" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" xmlSpace="preserve" {...{ "xmlns:serif": "http://www.serif.com/" }} style={{ fillRule: "evenodd", clipRule: "evenodd", strokeLinejoin: "round", strokeMiterlimit: "2" }}>
     <g transform="matrix(1,0,0,1,-3156.464426,-2699.628009)">
@@ -158,6 +158,6 @@ export default function Logo() {
     </defs>
 </svg>
     </div>
-  </div>
+  </a>
   );
 }
