@@ -4,12 +4,11 @@ import {
   useState,
 } from 'react'
 
+import { supabase } from '../../../lib/supabase.js'
 import TarjetaPlatillo from './TarjetaPlatillo'
 import CargadorPlacita from '../compartidos/CargadorPlacita'
 import './GaleriaMenu.css'
 
-const appScriptUrl =
-  'https://script.google.com/macros/s/AKfycbwf3NoJXnRCxikGEWfpER4UEjTtmmZvqGvCUvqijC0r-BGjF8_MuIe3IchWwVStT7lqRA/exec'
 const tiempoMaximoImagen = 10000
 const tiempoMaximoSolicitud = 12000
 
@@ -199,10 +198,7 @@ function GaleriaMenu({ alCompletarCarga }) {
   useEffect(() => {
     let cancelada = false
     let solicitudFinalizada = false
-    const callbackName =
-      `recibirPlatillos_${Date.now()}`
 
-    const script = document.createElement('script')
     const temporizadorSolicitud = window.setTimeout(() => {
       if (cancelada || solicitudFinalizada) return
 
@@ -212,68 +208,86 @@ function GaleriaMenu({ alCompletarCarga }) {
       alCompletarCarga()
     }, tiempoMaximoSolicitud)
 
-    window[callbackName] = async (datos) => {
-      if (solicitudFinalizada) return
-      solicitudFinalizada = true
-      window.clearTimeout(temporizadorSolicitud)
+    const mapearPlatillo = (platillo) => ({
+      id: platillo.id_platillo,
+      nombrePlatillo: platillo.nombre,
+      descripcion: platillo.descripcion,
+      foto: platillo.foto,
+      precio: platillo.precio,
+      descuento: platillo.descuento,
+      categoria: platillo.categoria?.nombre || '',
+      subcategoria: platillo.subcategoria?.nombre || '',
+      horarioDeComida: platillo.horario_comida?.nombre || '',
+      estadoActual: platillo.estado_platillo?.nombre || '',
+      ingredientes: (platillo.platillo_ingrediente || [])
+        .map((relacion) => relacion.ingrediente?.nombre)
+        .filter(Boolean)
+        .join(', '),
+    })
 
-      console.log('Platillos recibidos:', datos)
-
-      if (Array.isArray(datos)) {
-        const fotos = datos
-          .map((platillo) => platillo?.foto)
-          .filter((foto) => typeof foto === 'string' && foto.trim())
-
-        await Promise.all(fotos.map(precargarImagen))
-        if (cancelada) return
-
-        setPlatillos(datos)
-        setError('')
-      } else {
-        if (cancelada) return
-        setError(
-          'La información recibida del menú no es válida.'
-        )
-      }
-
-      setCargando(false)
-      alCompletarCarga()
-    }
-
-    script.src =
-      `${appScriptUrl}?api=platillos` +
-      `&callback=${encodeURIComponent(callbackName)}` +
-      `&t=${Date.now()}`
-
-    script.async = true
-
-    script.onerror = () => {
+    const recibirPlatillos = async (datos) => {
       if (cancelada || solicitudFinalizada) return
       solicitudFinalizada = true
       window.clearTimeout(temporizadorSolicitud)
-      console.error(
-        'No fue posible cargar la API de platillos:',
-        script.src
-      )
 
-      setError(
-        'No fue posible conectar con el menú de La Placita.'
-      )
+      if (!Array.isArray(datos)) {
+        if (cancelada) return
+        setError('La información recibida del menú no es válida.')
+        setCargando(false)
+        alCompletarCarga()
+        return
+      }
 
+      const platillosMapeados = datos.map(mapearPlatillo)
+
+      const fotos = platillosMapeados
+        .map((platillo) => platillo.foto)
+        .filter((foto) => typeof foto === 'string' && foto.trim())
+
+      await Promise.all(fotos.map(precargarImagen))
+      if (cancelada) return
+
+      setPlatillos(platillosMapeados)
+      setError('')
       setCargando(false)
       alCompletarCarga()
     }
 
-    document.body.appendChild(script)
+    const manejarError = () => {
+      if (cancelada || solicitudFinalizada) return
+      solicitudFinalizada = true
+      window.clearTimeout(temporizadorSolicitud)
+      console.error('No fue posible conectar con el menú de La Placita.')
+      setError('No fue posible conectar con el menú de La Placita.')
+      setCargando(false)
+      alCompletarCarga()
+    }
+
+    supabase
+      .from('platillo')
+      .select(`
+        id_platillo,
+        nombre,
+        descripcion,
+        foto,
+        precio,
+        descuento,
+        categoria ( nombre ),
+        subcategoria ( nombre ),
+        horario_comida ( nombre ),
+        estado_platillo ( nombre ),
+        platillo_ingrediente ( ingrediente ( nombre ) )
+      `)
+      .order('id_platillo', { ascending: true })
+      .then(({ data, error: errorSolicitud }) => {
+        if (errorSolicitud) throw errorSolicitud
+        return recibirPlatillos(data)
+      })
+      .catch(manejarError)
 
     return () => {
       cancelada = true
       window.clearTimeout(temporizadorSolicitud)
-      if (script.parentNode) {
-        script.parentNode.removeChild(script)
-      }
-
-      delete window[callbackName]
     }
   }, [alCompletarCarga])
 
