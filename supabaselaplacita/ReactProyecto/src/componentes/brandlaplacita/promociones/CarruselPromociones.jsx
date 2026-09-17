@@ -1,9 +1,8 @@
 import { useCallback, useEffect, useState } from 'react'
+import { supabase } from '../../../lib/supabase.js'
 import CargadorPlacita from '../compartidos/CargadorPlacita'
 
 const intervaloAutomatico = 6000
-const appScriptPromocionesUrl =
-  'https://script.google.com/macros/s/AKfycbwQpusvEQTd5UtGRCFf1dRTZbxW2CviL6xUGWtBpbyOv3kgVUfhSTw6aEFWLWhuyyNJrA/exec'
 const tiempoMaximoImagen = 10000
 const tiempoMaximoSolicitud = 12000
 
@@ -33,8 +32,6 @@ function CarruselPromociones({ alCompletarCarga }) {
   useEffect(() => {
     let cancelada = false
     let solicitudFinalizada = false
-    const callbackName = `recibirPromociones_${Date.now()}`
-    const script = document.createElement('script')
     const temporizadorSolicitud = window.setTimeout(() => {
       if (cancelada || solicitudFinalizada) return
 
@@ -44,8 +41,8 @@ function CarruselPromociones({ alCompletarCarga }) {
       alCompletarCarga()
     }, tiempoMaximoSolicitud)
 
-    window[callbackName] = async (datos) => {
-      if (solicitudFinalizada) return
+    const recibirPromociones = async (datos) => {
+      if (cancelada || solicitudFinalizada) return
       solicitudFinalizada = true
       window.clearTimeout(temporizadorSolicitud)
 
@@ -59,7 +56,11 @@ function CarruselPromociones({ alCompletarCarga }) {
 
       const promocionesValidas = datos.filter(
         (promocion) => promocion && typeof promocion.foto === 'string' && promocion.foto.trim(),
-      )
+      ).map((promocion) => ({
+        id: promocion.id_promocion,
+        foto: promocion.foto,
+        nombreFoto: promocion.nombre_foto,
+      }))
 
       await Promise.all(promocionesValidas.map((promocion) => precargarImagen(promocion.foto)))
       if (cancelada) return
@@ -71,12 +72,7 @@ function CarruselPromociones({ alCompletarCarga }) {
       alCompletarCarga()
     }
 
-    script.src =
-      `${appScriptPromocionesUrl}?api=promociones` +
-      `&callback=${encodeURIComponent(callbackName)}` +
-      `&t=${Date.now()}`
-    script.async = true
-    script.onerror = () => {
+    const manejarError = () => {
       if (cancelada || solicitudFinalizada) return
       solicitudFinalizada = true
       window.clearTimeout(temporizadorSolicitud)
@@ -85,13 +81,19 @@ function CarruselPromociones({ alCompletarCarga }) {
       alCompletarCarga()
     }
 
-    document.body.appendChild(script)
+    supabase
+      .from('promocion')
+      .select('id_promocion, foto, nombre_foto')
+      .order('id_promocion', { ascending: true })
+      .then(({ data, error: errorSolicitud }) => {
+        if (errorSolicitud) throw errorSolicitud
+        return recibirPromociones(data)
+      })
+      .catch(manejarError)
 
     return () => {
       cancelada = true
       window.clearTimeout(temporizadorSolicitud)
-      if (script.parentNode) script.parentNode.removeChild(script)
-      delete window[callbackName]
     }
   }, [alCompletarCarga])
 
