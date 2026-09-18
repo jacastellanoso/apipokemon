@@ -62,3 +62,17 @@ Convención recomendada: `postman/PokeWeb.postman_collection.json`.
 - No reducir controles de seguridad para resolver errores.
 - No modificar archivos ajenos al objetivo solicitado.
 - Explicar cualquier riesgo, supuesto o tarea pendiente de forma visible.
+
+## Proyecto Labs - Setup inicial
+
+- El proyecto de Reserva de Labs se encuentra dentro de `proyectolabs/`.
+- El backend está preparado para trabajar con Node.js, TypeScript, Express, Prisma y Zod.
+- El proyecto utiliza módulos ES mediante `"type": "module"` en `package.json`.
+- El backend utilizará el puerto `3010`.
+- La base de datos PostgreSQL está alojada en el proyecto `Proyecto Labs` de Supabase.
+- La conexión con la base de datos se configura mediante `DATABASE_URL` y `DIRECT_URL`.
+- Las credenciales y conexiones reales deben almacenarse únicamente en `.env` y nunca escribirse directamente en el código.
+- `.env.example` contiene la estructura de las variables necesarias, pero no debe contener credenciales reales.
+- `.env` y `node_modules/` están ignorados por Git y no deben subirse al repositorio.
+- El proyecto tiene preparados los scripts `dev`, `migrate`, `seed` y `studio`.
+- Este setup únicamente prepara el entorno. Los modelos `Sala` y `Reserva`, sus relaciones y las migraciones corresponden a la siguiente fase y no están implementados todavía.
