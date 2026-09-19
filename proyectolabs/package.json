@@ -3,18 +3,19 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
- "scripts": {
-  "dev": "tsx watch src/server.ts",
-  "migrate": "prisma migrate dev",
-  "seed": "tsx prisma/seed.ts",
-  "studio": "prisma studio"
-},
+  "scripts": {
+    "dev": "tsx watch src/server.ts",
+    "migrate": "prisma migrate dev",
+    "seed": "tsx prisma/seed.ts",
+    "studio": "prisma studio",
+    "postinstall": "prisma skills sync || exit 0"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "type": "module",
   "dependencies": {
-    "@prisma/client": "^7.10.0",
+    "@prisma/client": "^6.16.2",
     "cors": "^2.8.6",
     "dotenv": "^18.0.0",
     "express": "^5.2.1",
@@ -24,7 +25,7 @@
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.6",
     "@types/node": "^26.6.1",
-    "prisma": "^8.0.0-rc.15",
+    "prisma": "^6.16.2",
     "tsx": "^4.23.13",
     "typescript": "^5.9.3"
   }
