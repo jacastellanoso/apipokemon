@@ -1,0 +1,8 @@
+.franja-presentacion { position: relative; min-height: clamp(390px, 58svh, 590px); display: grid; align-items: center; overflow: hidden; color: #fff; background: linear-gradient(115deg, var(--azul-oscuro) 0%, #006ebd 52%, var(--azul) 100%); }
+.franja-presentacion::before { content: ""; position: absolute; border: 1px solid rgb(255 255 255 / 18%); border-radius: 50%; }
+.franja-presentacion::before { width: 42rem; height: 42rem; right: -13rem; top: -21rem; box-shadow: 0 0 0 6rem rgb(255 255 255 / 4%), 0 0 0 12rem rgb(255 255 255 / 3%); }
+.franja-presentacion__contenido { position: relative; z-index: 1; width: min(1100px, calc(100% - 2.5rem)); margin: auto; padding: clamp(3.5rem, 7vw, 6rem) clamp(0rem, 4vw, 3rem); }
+.franja-presentacion__etiqueta { margin: 0 0 1rem; color: #bfe6ff; font-size: .78rem; font-weight: 800; letter-spacing: .18em; text-transform: uppercase; }
+.franja-presentacion h1 { max-width: 780px; margin: 0; font-size: clamp(2.2rem, 5vw, 4.8rem); font-weight: 800; letter-spacing: -.045em; line-height: 1.03; text-wrap: balance; }
+.franja-presentacion__contenido > p:last-child { max-width: 650px; margin: 1.5rem 0 0; color: #e4f4ff; font-size: clamp(.95rem, 1.6vw, 1.12rem); line-height: 1.65; }
+@media (max-width: 760px) { .franja-presentacion { min-height: 430px; } .franja-presentacion__contenido { width: min(100% - 2rem, 1100px); } .franja-presentacion::before { width: 25rem; height: 25rem; right: -14rem; top: -8rem; } }

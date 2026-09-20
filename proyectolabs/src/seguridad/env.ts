@@ -18,9 +18,9 @@ const revision = envSchema.safeParse(process.env);
 
 // Verificamos si la revisión falló
 if (!revision.success) {
-  // Imprimimos un error en rojo en la consola para darnos cuenta rápido
-  console.error("✕ Configuración inválida. Revisa tu .env:");
-  // Imprimimos el detalle exacto de qué fue lo que faltó o estaba mal escrito
+  // Explicamos cómo preparar el entorno sin mostrar ni inventar credenciales.
+  console.error("Configuración inválida: revisa DATABASE_URL y DIRECT_URL en tu archivo .env local.");
+  console.error("Solicita las conexiones vigentes de Supabase al responsable del proyecto; no las publiques en Git.");
   console.error(revision.error.flatten().fieldErrors);
   // Esta línea apaga o mata el programa por completo. Nos sirve para que el servidor no arranque roto o con errores.
   process.exit(1); 
