@@ -7,10 +7,23 @@
 .menu__franja:hover, .menu__franja:focus-visible { color: var(--azul); background: #fff; box-shadow: 0 10px 22px rgb(0 105 190 / 25%); transform: translateY(-3px); }
 .menu__franja--activa { color: #fff; background: var(--azul-oscuro); border-color: var(--azul-oscuro); box-shadow: 0 8px 18px rgb(0 79 143 / 28%); }
 .menu__franja:active { transform: translateY(0) scale(.97); }
+.menu__franja::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  width: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #f2cb6a, #caa147);
+  border-radius: 999px 999px 0 0;
+  transform: translateX(-50%);
+  transition: width 240ms ease;
+}
+.menu__franja--activa::after { width: 55%; }
 .navegacion__interruptor { display: none; }
-.sitio--visible .encabezado__marca { animation: ensamblarMarca 700ms cubic-bezier(.2, .8, .2, 1) both; }
-.sitio--visible .menu__franja { animation: ensamblarFranja 650ms cubic-bezier(.2, .8, .2, 1) both; }
-.sitio--visible .menu__franja:nth-child(2) { animation-delay: 110ms; }
+.aplicacion--visible .encabezado__marca { animation: ensamblarMarca 700ms cubic-bezier(.2, .8, .2, 1) both; }
+.aplicacion--visible .menu__franja { animation: ensamblarFranja 650ms cubic-bezier(.2, .8, .2, 1) both; }
+.aplicacion--visible .menu__franja:nth-child(2) { animation-delay: 110ms; }
 @keyframes ensamblarMarca { from { transform: translateX(-45px); } to { transform: translateX(0); } }
 @keyframes ensamblarFranja { from { transform: translateY(-100%); } to { transform: translateY(0); } }
 @media (max-width: 900px) {
@@ -28,4 +41,4 @@
   .menu__franja { min-height: 48px; min-width: 0; }
 }
 @media (max-width: 390px) { .navegacion__interruptor { padding-inline: .8rem; } }
-@media (prefers-reduced-motion: reduce) { .menu, .menu__franja, .navegacion__icono i { transition: none; } .sitio--visible .encabezado__marca, .sitio--visible .menu__franja { animation: none; } }
+@media (prefers-reduced-motion: reduce) { .menu, .menu__franja, .menu__franja::after, .navegacion__icono i { transition: none; } .aplicacion--visible .encabezado__marca, .aplicacion--visible .menu__franja { animation: none; } }
