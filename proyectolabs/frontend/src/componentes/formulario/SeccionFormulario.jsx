@@ -1,4 +1,5 @@
 import "./seccionFormulario.css";
+import { FranjaLaboratorios } from "../disponibilidad/FranjaLaboratorios.jsx";
 
 export function SeccionFormulario() {
   return (
@@ -9,7 +10,9 @@ export function SeccionFormulario() {
         <h2 id="titulo-disponibilidad">Disponibilidad</h2>
         <span aria-hidden="true" />
       </div>
-      <div className="seccion-formulario__espacio" aria-label="Área reservada para el formulario" />
+      <div className="seccion-formulario__espacio" aria-label="Laboratorios disponibles">
+        <FranjaLaboratorios />
+      </div>
     </section>
   );
 }

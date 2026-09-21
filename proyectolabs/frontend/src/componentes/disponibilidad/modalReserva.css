@@ -1,0 +1,143 @@
+.modal-reserva__fondo {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: grid;
+  place-items: center;
+  padding: 1.5rem;
+  background: rgb(4 30 51 / 55%);
+  backdrop-filter: blur(3px);
+  animation: modalReservaAparecerFondo 200ms ease both;
+}
+
+.modal-reserva {
+  position: relative;
+  width: min(440px, 100%);
+  max-height: 90vh;
+  overflow-y: auto;
+  padding: clamp(1.75rem, 4vw, 2.5rem);
+  background: #fff;
+  border-radius: 1.25rem;
+  box-shadow: 0 24px 60px rgb(6 67 112 / 28%);
+  animation: modalReservaAparecer 240ms cubic-bezier(.2, .8, .2, 1) both;
+}
+
+.modal-reserva__cerrar {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  display: grid;
+  place-items: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  color: var(--azul-oscuro);
+  background: var(--azul-claro);
+  border: none;
+  border-radius: 999px;
+  font-size: 1.35rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: background 200ms ease, color 200ms ease;
+}
+.modal-reserva__cerrar:hover, .modal-reserva__cerrar:focus-visible { background: var(--azul); color: #fff; }
+
+.modal-reserva__encabezado { display: flex; align-items: flex-start; gap: .9rem; margin-bottom: 1.5rem; }
+.modal-reserva__insignia {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 3rem;
+  height: 3rem;
+  color: #fff;
+  background: linear-gradient(155deg, var(--azul) 0%, var(--azul-oscuro) 100%);
+  border-radius: 1rem;
+  box-shadow: 0 8px 18px rgb(0 139 255 / 30%);
+}
+.modal-reserva__insignia svg { width: 1.6rem; height: 1.6rem; }
+
+.modal-reserva__etiqueta { margin: 0 0 .3rem; color: var(--azul); font-size: .74rem; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; }
+.modal-reserva h3 { margin: 0; color: var(--azul-oscuro); font-size: clamp(1.25rem, 3vw, 1.55rem); line-height: 1.15; text-transform: uppercase; }
+.modal-reserva__edificio {
+  display: flex;
+  align-items: center;
+  gap: .4rem;
+  margin: .4rem 0 0;
+  color: var(--azul);
+  font-size: .82rem;
+  font-weight: 700;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+}
+.modal-reserva__edificio svg { width: .95rem; height: .95rem; }
+
+.modal-reserva__formulario { display: grid; gap: 1.1rem; }
+.modal-reserva__campo { display: grid; gap: .4rem; color: var(--azul-oscuro); font-size: .85rem; font-weight: 700; }
+.modal-reserva__etiqueta-campo { display: flex; align-items: center; gap: .5rem; }
+.modal-reserva__etiqueta-campo svg { flex-shrink: 0; width: 1.05rem; height: 1.05rem; color: var(--azul); }
+.modal-reserva__campo input {
+  padding: .7rem .9rem;
+  color: #063c64;
+  background: #fff;
+  border: 2px solid var(--azul-claro);
+  border-radius: .75rem;
+  font: inherit;
+  transition: border-color 200ms ease;
+}
+.modal-reserva__campo input:focus-visible { border-color: var(--azul); outline: none; }
+.modal-reserva__campo input:disabled { background: #f3f6f9; color: #7a8a99; }
+
+.modal-reserva__error { display: flex; align-items: center; gap: .4rem; color: #c0392b; font-size: .78rem; font-weight: 600; }
+.modal-reserva__error--general { margin: 0; padding: .75rem 1rem; background: #ffe3d8; border-radius: .75rem; }
+.modal-reserva__error svg { flex-shrink: 0; width: 1rem; height: 1rem; }
+
+.modal-reserva__acciones { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: .75rem; margin-top: .25rem; }
+.modal-reserva__boton {
+  padding: .7rem 1.5rem;
+  color: var(--azul);
+  background: #fff;
+  border: 2px solid var(--azul);
+  border-radius: 999px;
+  font-size: .82rem;
+  font-weight: 800;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: color 200ms ease, background 200ms ease, box-shadow 200ms ease, opacity 200ms ease;
+}
+.modal-reserva__boton:hover, .modal-reserva__boton:focus-visible { background: var(--azul-claro); }
+.modal-reserva__boton--primario { color: #fff; background: var(--azul); }
+.modal-reserva__boton--primario:hover, .modal-reserva__boton--primario:focus-visible {
+  background: var(--azul-oscuro);
+  border-color: var(--azul-oscuro);
+  box-shadow: 0 8px 18px rgb(0 79 143 / 28%);
+}
+.modal-reserva__boton:disabled { cursor: not-allowed; opacity: .6; }
+
+.modal-reserva__exito { display: grid; gap: 1.1rem; justify-items: center; padding: .5rem 0 .25rem; text-align: center; }
+.modal-reserva__exito-icono {
+  display: grid;
+  place-items: center;
+  width: 3.25rem;
+  height: 3.25rem;
+  color: #1fa855;
+  background: #e3f8ea;
+  border-radius: 999px;
+}
+.modal-reserva__exito-icono svg { width: 1.8rem; height: 1.8rem; }
+.modal-reserva__exito p { margin: 0; color: var(--azul-oscuro); font-size: 1.05rem; font-weight: 700; }
+
+@keyframes modalReservaAparecerFondo { from { opacity: 0; } to { opacity: 1; } }
+@keyframes modalReservaAparecer {
+  from { opacity: 0; transform: translateY(12px) scale(.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@media (max-width: 480px) {
+  .modal-reserva__acciones { justify-content: stretch; }
+  .modal-reserva__boton { flex: 1 1 auto; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .modal-reserva__fondo, .modal-reserva { animation: none; }
+  .modal-reserva__cerrar, .modal-reserva__boton, .modal-reserva__campo input { transition: none; }
+}

@@ -4,6 +4,45 @@ import type { Request, Response } from 'express';
 import { prisma } from './prisma.js';
 // Importamos las reglas de validación desde la nueva carpeta de seguridad
 import { crearSalaSchema, crearReservaSchema, idSchema } from './seguridad/validation.js';
+// Importamos el namespace 'Prisma' para poder usar sus tipos y el nivel de aislamiento de transacciones
+import { Prisma } from '@prisma/client';
+
+// Error interno que usamos solo para cortar la transacción cuando encontramos un horario ocupado
+class ConflictoDeHorarioError extends Error {}
+
+// Cuántas veces reintentamos la transacción si Postgres detecta un conflicto de serialización
+const INTENTOS_MAXIMOS_RESERVA = 3;
+
+// Busca choques de horario y crea la reserva dentro de una misma transacción serializable,
+// para que dos solicitudes simultáneas para el mismo horario no puedan colarse las dos.
+async function crearReservaSinTraslape(
+  salaId: number,
+  datos: { responsable: string; motivo: string; inicio: Date; fin: Date }
+) {
+  return prisma.$transaction(
+    async (tx) => {
+      // Dos reservas se traslapan si una empieza antes de que la otra termine y termina después de que la otra empieza
+      const conflicto = await tx.reserva.findFirst({
+        where: {
+          salaId,
+          inicio: { lt: datos.fin },
+          fin: { gt: datos.inicio }
+        }
+      });
+
+      if (conflicto) {
+        throw new ConflictoDeHorarioError();
+      }
+
+      return tx.reserva.create({
+        data: { ...datos, salaId }
+      });
+    },
+    // 'Serializable' hace que Postgres trate cada transacción como si se ejecutara sola,
+    // detectando y rechazando choques entre transacciones concurrentes que se pisan.
+    { isolationLevel: Prisma.TransactionIsolationLevel.Serializable }
+  );
+}
 
 // Función para mostrar todas las salas
 export const listarSalas = async (req: Request, res: Response) => {
@@ -86,18 +125,38 @@ export const crearReserva = async (req: Request, res: Response) => {
     return;
   }
 
-  // Si llegamos hasta aquí, todo está perfecto. Creamos el registro de la reserva.
-  const nuevaReserva = await prisma.reserva.create({
-    data: {
-      // Copiamos toda la información validada de la reserva (responsable, motivo, inicio, fin)
-      ...revisionReserva.data,
-      // Le adjuntamos el ID de la sala a la que pertenece esta reserva
-      salaId: revisionId.data
+  // Si llegamos hasta aquí, los datos son válidos y la sala existe.
+  // Intentamos crear la reserva, reintentando si Postgres detecta un choque de serialización
+  // entre dos solicitudes que llegaron casi al mismo tiempo para el mismo horario.
+  for (let intento = 1; intento <= INTENTOS_MAXIMOS_RESERVA; intento++) {
+    try {
+      const nuevaReserva = await crearReservaSinTraslape(revisionId.data, revisionReserva.data);
+      // Entregamos la reserva recién creada
+      res.status(201).json(nuevaReserva);
+      return;
+    } catch (error) {
+      // Encontramos una reserva que se traslapa con el horario pedido
+      if (error instanceof ConflictoDeHorarioError) {
+        res.status(409).json({ error: 'El laboratorio ya está reservado en ese horario.' });
+        return;
+      }
+
+      // P2034: Postgres detectó un conflicto de escritura entre transacciones concurrentes.
+      // Reintentamos con una pequeña espera; en el reintento, la reserva que ganó la carrera
+      // ya estará visible y nuestro findFirst la detectará como traslape (409).
+      const esConflictoDeSerializacion =
+        error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2034';
+
+      if (esConflictoDeSerializacion && intento < INTENTOS_MAXIMOS_RESERVA) {
+        await new Promise((resolver) => setTimeout(resolver, 40 * intento));
+        continue;
+      }
+
+      console.error('🚨 Error al crear la reserva:', error);
+      res.status(500).json({ mensaje: 'No pudimos crear la reserva.' });
+      return;
     }
-  });
-  
-  // Entregamos la reserva recién creada
-  res.status(201).json(nuevaReserva);
+  }
 };
 
 // Función para modificar los datos de una sala que ya existe
