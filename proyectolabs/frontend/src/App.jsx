@@ -27,10 +27,13 @@ export default function App() {
   }
 
   return (
-    <div className="aplicacion">
+    <div className={`aplicacion ${mostrarIntro ? "aplicacion--esperando" : "aplicacion--visible"}`}>
       {mostrarIntro && <AnimacionLogo alFinalizar={finalizarIntro} />}
+      {/* Encabezado vive fuera de .sitio a propósito: .sitio anima su propio
+          transform al aparecer, y cualquier transform en un ancestro de un
+          elemento position:fixed rompe su anclaje al viewport. */}
+      <Encabezado />
       <div className={mostrarIntro ? "sitio sitio--esperando" : "sitio sitio--visible"}>
-        <Encabezado />
         <main>
           <FranjaPresentacion />
           <SeccionFormulario />

@@ -22,7 +22,7 @@ a, button { -webkit-tap-highlight-color: transparent; }
 [data-seccion] { scroll-margin-top: 94px; }
 .sitio--esperando { visibility: visible; opacity: 1; }
 .sitio--visible { visibility: visible; opacity: 1; animation: revelarSitio 650ms ease both; }
-@keyframes revelarSitio { from { transform: translateY(14px); } to { transform: translateY(0); } }
+@keyframes revelarSitio { from { transform: translateY(14px); } to { transform: none; } }
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
