@@ -1,0 +1,9 @@
+.seccion-formulario {
+  min-height: clamp(480px, 65vw, 720px);
+  padding: clamp(4rem, 8vw, 7rem) max(1.25rem, calc((100% - 1100px) / 2));
+  background: #fff;
+}
+.seccion-formulario__encabezado p { margin: 0 0 .65rem; color: var(--azul); font-size: .76rem; font-weight: 800; letter-spacing: .16em; text-transform: uppercase; }
+.seccion-formulario__encabezado h2 { margin: 0; color: var(--azul-oscuro); font-size: clamp(2.3rem, 5vw, 4.5rem); line-height: 1; text-transform: uppercase; }
+.seccion-formulario__encabezado span { display: block; width: 4.5rem; height: 5px; margin-top: 1.25rem; background: var(--azul); border-radius: 999px; }
+.seccion-formulario__espacio { min-height: 260px; }

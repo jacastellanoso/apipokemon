@@ -1,0 +1,20 @@
+.intro { position: fixed; inset: 0; z-index: 100; display: grid; place-items: center; overflow: hidden; isolation: isolate; background: radial-gradient(circle at 50% 50%, #fff 0%, #fff 17%, #fbfdff 29%, #f5faff 48%, #fff 73%, #f8fcff 100%); opacity: 1; transition: opacity 550ms ease, visibility 550ms ease; }
+.intro--saliendo { opacity: 0; visibility: hidden; }
+.intro__anillos, .intro__luz { position: absolute; inset: 0; pointer-events: none; }
+.intro__anillos { left: 50%; top: 50%; width: max(145vw, 145vh); height: max(145vw, 145vh); inset: auto; border-radius: 50%; background: repeating-radial-gradient(circle at center, #fff 0, #fff 7.4%, rgb(225 243 255 / 92%) 7.7%, rgb(194 228 255 / 74%) 10.6%, rgb(235 247 255 / 90%) 13%, #fff 15.2%, #fff 21.2%); filter: drop-shadow(0 0 12px rgb(0 139 255 / 6%)); animation: respirarAnillos 7s ease-in-out infinite; }
+.intro__anillos::before { content: ""; position: absolute; inset: 0; border-radius: inherit; background: repeating-radial-gradient(circle at center, transparent 0, transparent 7%, rgb(0 139 255 / 7%) 7.5%, transparent 8.4%, transparent 13.1%, rgb(255 255 255 / 96%) 14.2%, transparent 15.4%, transparent 21.2%); filter: blur(9px); opacity: .95; }
+.intro__anillos::after { content: ""; position: absolute; inset: 0; border-radius: inherit; background: repeating-radial-gradient(circle at center, transparent 0, transparent calc(21.2% - 1px), rgb(0 139 255 / 43%) calc(21.2% - 1px), rgb(0 139 255 / 43%) 21.2%); opacity: .58; }
+.intro__luz { z-index: 1; background: radial-gradient(circle at center, rgb(255 255 255 / 92%) 0 13%, rgb(255 255 255 / 28%) 21%, rgb(0 139 255 / 2.5%) 36%, transparent 58%); }
+.intro__marca { position: relative; z-index: 2; width: min(34vw, 330px); height: 330px; }
+.intro__jaguar { position: absolute; z-index: 1; left: 11%; top: 8px; width: 78%; height: 205px; overflow: hidden; }
+.intro__jaguar img { width: 100%; opacity: 0; transform: translateY(105%); animation: aparecerJaguar 6.8s cubic-bezier(.42, 0, .24, 1) forwards; }
+.logo-landivar--intro { position: absolute; z-index: 2; left: 6%; top: 162px; width: 88%; height: auto; filter: drop-shadow(0 5px 9px rgb(0 139 255 / 10%)); animation: moverLogo 6.8s cubic-bezier(.42, 0, .24, 1) forwards; }
+.intro__carga { position: absolute; z-index: 3; left: 50%; bottom: 2rem; width: 2rem; height: 2rem; padding: 3px; border: 2px solid rgb(0 139 255 / 18%); border-top-color: var(--azul); border-radius: 50%; animation: girar 900ms linear infinite; }
+.intro__carga span { display: block; width: 100%; height: 100%; border-radius: inherit; background: rgb(0 139 255 / 8%); }
+@keyframes respirarAnillos { 0%, 100% { transform: translate(-50%, -50%) scale(1); } 50% { transform: translate(-50%, -50%) scale(1.018); } }
+@keyframes moverLogo { 0%, 18% { transform: translateY(-78px); } 32%, 76% { transform: translateY(0); } 92%, 100% { transform: translateY(-78px); } }
+@keyframes aparecerJaguar { 0%, 24% { opacity: 0; transform: translateY(105%); } 27% { opacity: 1; } 42%, 72% { opacity: 1; transform: translateY(0); } 82%, 100% { opacity: 0; transform: translateY(105%); } }
+@keyframes girar { to { transform: rotate(360deg); } }
+@media (max-width: 700px) { .intro__marca { width: min(72vw, 300px); height: 300px; } .intro__jaguar { height: 186px; } .logo-landivar--intro { top: 148px; } }
+@media (max-height: 560px) and (orientation: landscape) { .intro__marca { width: 220px; height: 230px; } .intro__jaguar { height: 140px; } .logo-landivar--intro { top: 112px; } }
+@media (prefers-reduced-motion: reduce) { .intro { display: none; } .intro__anillos, .intro__jaguar img, .logo-landivar--intro, .intro__carga { animation: none; } }

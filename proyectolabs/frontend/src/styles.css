@@ -1,0 +1,35 @@
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap");
+
+:root {
+  font-family: "Montserrat", Arial, sans-serif;
+  color: #063c64;
+  background: #fff;
+  font-synthesis: none;
+  --azul: #008bff;
+  --azul-oscuro: #004f8f;
+  --azul-claro: #d8efff;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { margin: 0; min-width: 320px; min-height: 100vh; }
+button, input, select { font: inherit; }
+a, button { -webkit-tap-highlight-color: transparent; }
+:focus-visible { outline: 3px solid #62bdff; outline-offset: 4px; }
+.aplicacion, .sitio { min-height: 100vh; }
+.aplicacion { background: #fff; }
+.sitio { padding-top: 94px; }
+[data-seccion] { scroll-margin-top: 94px; }
+.sitio--esperando { visibility: visible; opacity: 1; }
+.sitio--visible { visibility: visible; opacity: 1; animation: revelarSitio 650ms ease both; }
+@keyframes revelarSitio { from { transform: translateY(14px); } to { transform: none; } }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .sitio--visible { animation: none; }
+}
+
+@media (max-width: 900px) {
+  .sitio { padding-top: 76px; }
+  [data-seccion] { scroll-margin-top: 76px; }
+}

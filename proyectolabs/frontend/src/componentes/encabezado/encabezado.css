@@ -1,0 +1,44 @@
+.encabezado { position: fixed; z-index: 50; top: 0; left: 0; width: 100%; height: 94px; display: grid; grid-template-columns: minmax(250px, 25%) 1fr; background: rgb(255 255 255 / 96%); box-shadow: 0 8px 30px rgb(6 67 112 / 12%); backdrop-filter: blur(12px); }
+.encabezado__marca { display: flex; align-items: center; justify-content: center; min-width: 0; padding: .8rem clamp(1rem, 3vw, 2rem); background: #fff; }
+.logo-landivar--encabezado { display: block; width: min(100%, 225px); height: auto; max-height: 66px; }
+.navegacion { min-width: 0; }
+.menu { display: flex; height: 100%; align-items: center; justify-content: flex-end; gap: 1rem; padding: 0 clamp(1rem, 4vw, 3rem); }
+.menu__franja { position: relative; min-width: 150px; display: grid; place-items: center; min-height: 48px; padding: .8rem 1.6rem; overflow: hidden; color: #fff; background: var(--azul); border: 2px solid var(--azul); border-radius: 999px; box-shadow: 0 7px 16px rgb(0 139 255 / 24%); font-size: .82rem; font-weight: 800; letter-spacing: .04em; text-decoration: none; text-transform: uppercase; transition: color 240ms ease, background 240ms ease, transform 240ms ease, box-shadow 240ms ease; }
+.menu__franja:hover, .menu__franja:focus-visible { color: var(--azul); background: #fff; box-shadow: 0 10px 22px rgb(0 105 190 / 25%); transform: translateY(-3px); }
+.menu__franja--activa { color: #fff; background: var(--azul-oscuro); border-color: var(--azul-oscuro); box-shadow: 0 8px 18px rgb(0 79 143 / 28%); }
+.menu__franja:active { transform: translateY(0) scale(.97); }
+.menu__franja::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  width: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #f2cb6a, #caa147);
+  border-radius: 999px 999px 0 0;
+  transform: translateX(-50%);
+  transition: width 240ms ease;
+}
+.menu__franja--activa::after { width: 55%; }
+.navegacion__interruptor { display: none; }
+.aplicacion--visible .encabezado__marca { animation: ensamblarMarca 700ms cubic-bezier(.2, .8, .2, 1) both; }
+.aplicacion--visible .menu__franja { animation: ensamblarFranja 650ms cubic-bezier(.2, .8, .2, 1) both; }
+.aplicacion--visible .menu__franja:nth-child(2) { animation-delay: 110ms; }
+@keyframes ensamblarMarca { from { transform: translateX(-45px); } to { transform: translateX(0); } }
+@keyframes ensamblarFranja { from { transform: translateY(-100%); } to { transform: translateY(0); } }
+@media (max-width: 900px) {
+  .encabezado { grid-template-columns: minmax(0, 1fr) auto; height: 76px; }
+  .encabezado__marca { justify-content: flex-start; padding: .7rem 1rem; }
+  .logo-landivar--encabezado { width: min(52vw, 180px); max-height: 54px; }
+  .navegacion { display: flex; align-items: center; padding-right: 1rem; }
+  .navegacion__interruptor { display: inline-flex; align-items: center; gap: .7rem; min-height: 44px; padding: .65rem .85rem; color: var(--azul-oscuro); background: #fff; border: 1px solid var(--azul-claro); border-radius: .7rem; font-weight: 800; cursor: pointer; }
+  .navegacion__icono { display: grid; gap: 5px; width: 18px; }
+  .navegacion__icono i { display: block; height: 2px; background: currentColor; transition: transform 220ms ease; }
+  .navegacion__interruptor[aria-expanded="true"] .navegacion__icono i:first-child { transform: translateY(3.5px) rotate(45deg); }
+  .navegacion__interruptor[aria-expanded="true"] .navegacion__icono i:last-child { transform: translateY(-3.5px) rotate(-45deg); }
+  .menu { position: absolute; top: 100%; right: 0; width: min(100%, 310px); height: auto; flex-direction: column; align-items: stretch; padding: 1rem; background: #fff; box-shadow: 0 16px 32px rgb(5 60 99 / 16%); opacity: 0; visibility: hidden; transform: translateY(-10px); transition: opacity 220ms ease, visibility 220ms ease, transform 220ms ease; }
+  .menu--abierto { opacity: 1; visibility: visible; transform: translateY(0); }
+  .menu__franja { min-height: 48px; min-width: 0; }
+}
+@media (max-width: 390px) { .navegacion__interruptor { padding-inline: .8rem; } }
+@media (prefers-reduced-motion: reduce) { .menu, .menu__franja, .menu__franja::after, .navegacion__icono i { transition: none; } .aplicacion--visible .encabezado__marca, .aplicacion--visible .menu__franja { animation: none; } }
